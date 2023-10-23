@@ -1,0 +1,30 @@
+{{define "base"}}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>{{template "title" .}}</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='/static/output.css'>
+    <!-- <script src=''></script> -->
+</head>
+
+<body>
+    <div class="container mx-auto bg-indigo-500">
+        {{template "header" .}}
+        <section class="flex flex-row">
+            <div class="rn w-1/4">
+                {{block "righ-nav" .}}{{end}}
+            </div>
+            <div class="cn grow">
+                {{template "body" .}}
+            </div>
+        </section>
+        {{template "footer"}}
+    </div>
+</body>
+
+</html>
+{{end}}
