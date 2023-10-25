@@ -9,20 +9,21 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='/static/output.css'>
     <!-- <script src=''></script> -->
+    
 </head>
 
 <body>
     <div class="container mx-auto">
         {{template "header" .}}
         <section class="flex flex-row">
-            <div class="rn w-1/4">
+            <div class="">
                 {{block "righ-nav" .}}{{end}}
             </div>
-            <div class="cn grow">
+            <div class="grow">
                 {{template "body" .}}
             </div>
         </section>
-        {{template "footer"}}
+        {{template "footer" .}}
     </div>
 </body>
 
