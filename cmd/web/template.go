@@ -3,10 +3,13 @@ package main
 import (
 	"html/template"
 	"path/filepath"
+
+	"github.com/muchiri08/certrack/internal/forms"
 )
 
 type templateData struct {
 	CurrentYear int
+	Form        *forms.Form
 }
 
 // caching templates to speed up rendering
