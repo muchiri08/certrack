@@ -64,3 +64,7 @@ func (app *application) signin(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+func (app *application) home(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, "home.page.html", &templateData{HasSidebar: true})
+}

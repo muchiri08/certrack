@@ -9,6 +9,7 @@ import (
 
 type templateData struct {
 	CurrentYear int
+	HasSidebar  bool
 	Form        *forms.Form
 }
 
