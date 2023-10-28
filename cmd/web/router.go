@@ -14,7 +14,7 @@ func (app *application) routes() *httprouter.Router {
 	router.HandlerFunc(http.MethodPost, "/signup", app.signup)
 	router.HandlerFunc(http.MethodGet, "/signin", app.signinForm)
 	router.HandlerFunc(http.MethodPost, "/signin", app.signin)
-	router.HandlerFunc(http.MethodGet, "/home", app.home)
+	router.HandlerFunc(http.MethodGet, "/home/:view", app.home)
 
 	// serving static files
 	router.ServeFiles("/static/*filepath", http.Dir("./ui/static"))

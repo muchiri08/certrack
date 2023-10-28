@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"runtime/debug"
 	"time"
+
+	"github.com/julienschmidt/httprouter"
 )
 
 func (app *application) render(w http.ResponseWriter, r *http.Request, name string, data *templateData) {
@@ -52,4 +54,10 @@ func (app *application) clientError(w http.ResponseWriter, status int) {
 // notFound send a 404 not found resp to the user
 func (app *application) notFound(w http.ResponseWriter) {
 	app.clientError(w, http.StatusNotFound)
+}
+
+func (app *application) getParam(r *http.Request, name string) string {
+	params := httprouter.ParamsFromContext(r.Context())
+
+	return params.ByName(name)
 }
