@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"errors"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 var ErrDuplicateEmail = errors.New("duplicate email")
@@ -40,6 +42,18 @@ func (m *UserModel) NewUser(user *User) error {
 			return err
 		}
 	}
+
+	return nil
+}
+
+func (p *Password) Set(plaintextPassword string) error {
+	hash, err := bcrypt.GenerateFromPassword([]byte(plaintextPassword), 12)
+	if err != nil {
+		return err
+	}
+
+	p.Plaintext = &plaintextPassword
+	p.Hash = hash
 
 	return nil
 }

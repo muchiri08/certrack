@@ -28,7 +28,7 @@ var dsn string
 func main() {
 
 	port := flag.Int("port", 4000, "port address")
-	flag.StringVar(&dsn, "dsn", "postgres://root:KiNuThiaPro$2@localhost/certrack", "PostgreSQL DSN")
+	flag.StringVar(&dsn, "dsn", "", "PostgreSQL DSN")
 
 	flag.Parse()
 
