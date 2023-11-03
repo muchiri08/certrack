@@ -1,9 +1,11 @@
 package main
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/muchiri08/certrack/internal/forms"
+	"github.com/muchiri08/certrack/internal/models"
 )
 
 func (app *application) index(w http.ResponseWriter, r *http.Request) {
@@ -29,7 +31,33 @@ func (app *application) signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	app.infoLog.Println(form.Get("email"), form.Get("username"), form.Get("password"))
+	user := models.User{
+		Username: form.Get("username"),
+		Email:    form.Get("email"),
+	}
+
+	err := user.Password.Set(form.Get("password"))
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	err = app.models.Users.NewUser(&user)
+	if err != nil {
+		switch {
+		case errors.Is(err, models.ErrDuplicateEmail):
+			form.Errors.Add("generic", "email already exists")
+			app.render(w, r, pSIGNUP, &templateData{Form: form})
+		case errors.Is(err, models.ErrDuplicateUsername):
+			form.Errors.Add("generic", "username already exists")
+			app.render(w, r, pSIGNUP, &templateData{Form: form})
+		default:
+			app.serverError(w, err)
+		}
+		return
+	}
+
+	http.Redirect(w, r, "/signin", http.StatusSeeOther)
 
 }
 

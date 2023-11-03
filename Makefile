@@ -16,4 +16,4 @@ create:
 .PHONY: migrate/up
 migrate/up:
 	@echo 'Running up migrations...'
-	@migrate -path=./migrations -database=${CERTRACK-DSN} 
+	@migrate -path=./migrations -database=${CERTRACK-DSN} up

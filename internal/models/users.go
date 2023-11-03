@@ -8,7 +8,10 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var ErrDuplicateEmail = errors.New("duplicate email")
+var (
+	ErrDuplicateEmail    = errors.New("duplicate email")
+	ErrDuplicateUsername = errors.New("duplicate username")
+)
 
 type User struct {
 	Id         int32
@@ -38,6 +41,8 @@ func (m *UserModel) NewUser(user *User) error {
 		switch {
 		case err.Error() == `pq: duplicate key value violates unique constraint "users_email_key"`:
 			return ErrDuplicateEmail
+		case err.Error() == `pq: duplicate key value violates unique constraint "users_username_key"`:
+			return ErrDuplicateUsername
 		default:
 			return err
 		}
