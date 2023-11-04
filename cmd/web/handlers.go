@@ -57,12 +57,15 @@ func (app *application) signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	app.sessionManager.Put(r.Context(), "flash", "Signup successfull. Please signin in below.")
+
 	http.Redirect(w, r, "/signin", http.StatusSeeOther)
 
 }
 
 func (app *application) signinForm(w http.ResponseWriter, r *http.Request) {
-	app.render(w, r, pSIGNIN, &templateData{Form: &forms.Form{}})
+	flash := app.sessionManager.PopString(r.Context(), "flash")
+	app.render(w, r, pSIGNIN, &templateData{Form: &forms.Form{}, Flash: flash})
 }
 
 func (app *application) signin(w http.ResponseWriter, r *http.Request) {

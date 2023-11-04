@@ -11,6 +11,7 @@ type templateData struct {
 	CurrentYear int
 	HasSidebar  bool
 	Form        *forms.Form
+	Flash       string
 }
 
 // caching templates to speed up rendering

@@ -4,17 +4,21 @@ import (
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
+	"github.com/justinas/alice"
 )
 
-func (app *application) routes() *httprouter.Router {
+func (app *application) routes() http.Handler {
+
+	dynamicMiddleware := alice.New(app.sessionManager.LoadAndSave)
+
 	router := httprouter.New()
 
-	router.HandlerFunc(http.MethodGet, "/", app.index)
-	router.HandlerFunc(http.MethodGet, "/signup", app.signupForm)
-	router.HandlerFunc(http.MethodPost, "/signup", app.signup)
-	router.HandlerFunc(http.MethodGet, "/signin", app.signinForm)
-	router.HandlerFunc(http.MethodPost, "/signin", app.signin)
-	router.HandlerFunc(http.MethodGet, "/home/:view", app.home)
+	router.Handler(http.MethodGet, "/", dynamicMiddleware.ThenFunc(app.index))
+	router.Handler(http.MethodGet, "/signup", dynamicMiddleware.ThenFunc(app.signupForm))
+	router.Handler(http.MethodPost, "/signup", dynamicMiddleware.ThenFunc(app.signup))
+	router.Handler(http.MethodGet, "/signin", dynamicMiddleware.ThenFunc(app.signinForm))
+	router.Handler(http.MethodPost, "/signin", dynamicMiddleware.ThenFunc(app.signin))
+	router.Handler(http.MethodGet, "/home/:view", dynamicMiddleware.ThenFunc(app.home))
 
 	// serving static files
 	router.ServeFiles("/static/*filepath", http.Dir("./ui/static"))

@@ -11,16 +11,18 @@ import (
 	"os"
 	"time"
 
+	"github.com/alexedwards/scs/v2"
 	_ "github.com/lib/pq"
 
 	"github.com/muchiri08/certrack/internal/models"
 )
 
 type application struct {
-	infoLog       *log.Logger
-	errorLog      *log.Logger
-	templateCache map[string]*template.Template
-	models        models.Models
+	infoLog        *log.Logger
+	errorLog       *log.Logger
+	templateCache  map[string]*template.Template
+	models         models.Models
+	sessionManager *scs.SessionManager
 }
 
 var dsn string
@@ -46,11 +48,16 @@ func main() {
 	}
 	defer db.Close()
 
+	sessionManager := scs.New()
+	sessionManager.Lifetime = 24 * time.Hour
+	sessionManager.Cookie.SameSite = http.SameSiteStrictMode
+
 	app := &application{
-		infoLog:       infoLog,
-		errorLog:      errorLog,
-		templateCache: tempCache,
-		models:        models.NewModel(db),
+		infoLog:        infoLog,
+		errorLog:       errorLog,
+		templateCache:  tempCache,
+		models:         models.NewModel(db),
+		sessionManager: sessionManager,
 	}
 
 	srv := http.Server{
