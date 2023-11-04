@@ -4,9 +4,11 @@
 
 {{define "body"}}
 <div class="flex flex-col items-center justify-center h-[80vh]">
-    <h1 class="text-2xl mb-6">Signup</h1>
+    <h1 class="text-2xl mb-6">Signup</h1>    
     {{with .Form.Errors.Get "generic"}}
-    <label class="text-base sm:text-xs md:text-sm text-red-500">{{.}}</label>
+    <div class="p-2 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
+        {{.}}.
+    </div>
     {{end}}
     <form class="w-1/3" action="/signup" method="POST">
         {{with .Form}}
