@@ -9,6 +9,7 @@ import (
 
 func (app *application) routes() http.Handler {
 
+	staticMiddleware := alice.New(app.recoverPanic)
 	dynamicMiddleware := alice.New(app.sessionManager.LoadAndSave, app.authenticate)
 
 	router := httprouter.New()
@@ -24,5 +25,5 @@ func (app *application) routes() http.Handler {
 	// serving static files
 	router.ServeFiles("/static/*filepath", http.Dir("./ui/static"))
 
-	return router
+	return staticMiddleware.Then(router)
 }
