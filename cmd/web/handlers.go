@@ -119,3 +119,8 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		app.notFound(w)
 	}
 }
+
+func (app *application) logout(w http.ResponseWriter, r *http.Request) {
+	app.sessionManager.Remove(r.Context(), "username")
+	http.Redirect(w, r, "/signin", http.StatusSeeOther)
+}

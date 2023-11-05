@@ -6,7 +6,7 @@
 
     <div>
         {{if .Authenticated}}
-        <a href="/signout"
+        <a href="/logout"
             class="content-center text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2 mr-2 mb-2">Logout {{.Authenticated.Username}}
         </a>
         {{else}}

@@ -19,6 +19,7 @@ func (app *application) routes() http.Handler {
 	router.Handler(http.MethodGet, "/signin", dynamicMiddleware.ThenFunc(app.signinForm))
 	router.Handler(http.MethodPost, "/signin", dynamicMiddleware.ThenFunc(app.signin))
 	router.Handler(http.MethodGet, "/home/:view", dynamicMiddleware.Append(app.requiredAuthentication).ThenFunc(app.home))
+	router.Handler(http.MethodGet, "/logout", dynamicMiddleware.Append(app.requiredAuthentication).ThenFunc(app.logout))
 
 	// serving static files
 	router.ServeFiles("/static/*filepath", http.Dir("./ui/static"))
