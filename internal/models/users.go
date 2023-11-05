@@ -11,6 +11,8 @@ import (
 var (
 	ErrDuplicateEmail    = errors.New("duplicate email")
 	ErrDuplicateUsername = errors.New("duplicate username")
+	ErrNoRecordFound     = errors.New("no record found")
+	ErrInvalidPassword   = errors.New("invalid credentials")
 )
 
 type User struct {
@@ -51,6 +53,24 @@ func (m *UserModel) NewUser(user *User) error {
 	return nil
 }
 
+func (m *UserModel) GetUserByUsername(username string) (*User, error) {
+	var user User
+	stmt := `SELECT id, username, password_hash FROM users WHERE username = $1`
+
+	err := m.DB.QueryRow(stmt, &username).Scan(&user.Id, &user.Username, &user.Password.Hash)
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil, ErrNoRecordFound
+		default:
+			return nil, err
+		}
+	}
+
+	return &user, nil
+
+}
+
 func (p *Password) Set(plaintextPassword string) error {
 	hash, err := bcrypt.GenerateFromPassword([]byte(plaintextPassword), 12)
 	if err != nil {
@@ -61,4 +81,18 @@ func (p *Password) Set(plaintextPassword string) error {
 	p.Hash = hash
 
 	return nil
+}
+
+func (p *Password) Matches(plainPassword string) (bool, error) {
+	err := bcrypt.CompareHashAndPassword(p.Hash, []byte(plainPassword))
+	if err != nil {
+		switch {
+		case errors.Is(err, bcrypt.ErrMismatchedHashAndPassword):
+			return false, nil
+		default:
+			return false, err
+		}
+	}
+
+	return true, nil
 }

@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/julienschmidt/httprouter"
+	"github.com/muchiri08/certrack/internal/models"
 )
 
 func (app *application) render(w http.ResponseWriter, r *http.Request, name string, data *templateData) {
@@ -36,8 +37,18 @@ func (app *application) addDefaultData(td *templateData, r *http.Request) *templ
 	}
 
 	td.CurrentYear = time.Now().Year()
+	td.Authenticated = app.authenticatedUser(r)
 
 	return td
+}
+
+func (app *application) authenticatedUser(r *http.Request) *models.User {
+	user, ok := r.Context().Value(contextKeyUser).(*models.User)
+	if !ok {
+		return nil
+	}
+
+	return user
 }
 
 func (app *application) serverError(w http.ResponseWriter, err error) {

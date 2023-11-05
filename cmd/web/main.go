@@ -25,7 +25,12 @@ type application struct {
 	sessionManager *scs.SessionManager
 }
 
-var dsn string
+type contextKey string
+
+var (
+	dsn            string
+	contextKeyUser = contextKey("user")
+)
 
 func main() {
 

@@ -5,13 +5,15 @@ import (
 	"path/filepath"
 
 	"github.com/muchiri08/certrack/internal/forms"
+	"github.com/muchiri08/certrack/internal/models"
 )
 
 type templateData struct {
-	CurrentYear int
-	HasSidebar  bool
-	Form        *forms.Form
-	Flash       string
+	CurrentYear   int
+	HasSidebar    bool
+	Form          *forms.Form
+	Flash         string
+	Authenticated *models.User
 }
 
 // caching templates to speed up rendering

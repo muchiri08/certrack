@@ -82,17 +82,28 @@ func (app *application) signin(w http.ResponseWriter, r *http.Request) {
 	username := form.Get("username")
 	password := form.Get("password")
 
-	if username != "kennedy" {
+	user, err := app.models.Users.GetUserByUsername(username)
+	if err != nil {
 		form.Errors.Add("generic", "Invalid credentials")
 		app.render(w, r, pSIGNIN, &templateData{Form: form})
 		return
 	}
 
-	if password != "12345678" {
+	match, err := user.Password.Matches(password)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	if !match {
 		form.Errors.Add("generic", "Invalid credentials")
 		app.render(w, r, pSIGNIN, &templateData{Form: form})
 		return
 	}
+
+	app.sessionManager.Put(r.Context(), "username", user.Username)
+
+	http.Redirect(w, r, "/home/domains", http.StatusSeeOther)
 
 }
 
