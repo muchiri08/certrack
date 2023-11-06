@@ -22,6 +22,16 @@ func (app *application) recoverPanic(next http.Handler) http.Handler {
 	})
 }
 
+// Securing headers to help prevent XSS and Clickjacking attacks.
+func (app *application) secureHeaders(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("X-Frame-Options", "deny")
+		w.Header().Set("X-XSS-Protection", "1; mode=block")
+
+		next.ServeHTTP(w, r)
+	})
+}
+
 func (app *application) authenticate(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		exists := app.sessionManager.Exists(r.Context(), "username")
