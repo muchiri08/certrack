@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"net/http"
+	"strings"
 
 	"github.com/muchiri08/certrack/internal/forms"
 	"github.com/muchiri08/certrack/internal/models"
@@ -112,11 +113,34 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	case app.getParam(r, "view") == "domains":
 		app.render(w, r, pDOMAINS, &templateData{HasSidebar: true})
 	case app.getParam(r, "view") == "new":
-		app.render(w, r, pNEW, &templateData{HasSidebar: true})
+		app.render(w, r, pNEW, &templateData{HasSidebar: true, Form: &forms.Form{}})
 	case app.getParam(r, "view") == "account":
 		app.render(w, r, pACCOUNT, &templateData{HasSidebar: true})
 	default:
 		app.notFound(w)
+	}
+}
+
+func (app *application) newDomain(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	form := forms.New(r.PostForm)
+	form.Required("domain")
+
+	if !form.Valid() {
+		app.render(w, r, pNEW, &templateData{HasSidebar: true, Form: form})
+		return
+	}
+
+	app.infoLog.Println(form.Get("domain"))
+
+	domainsString := form.Get("domain")
+	domains := strings.Split(strings.ReplaceAll(domainsString, " ", ""), ",")
+	for _, value := range domains {
+		app.infoLog.Println(value)
 	}
 }
 
