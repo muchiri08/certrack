@@ -12,7 +12,7 @@ type Certificate struct {
 	Domain     string
 	Issuer     string
 	ExpiryDate time.Time
-	DaysLeft   int64
+	DaysLeft   int
 	Status     string
 }
 
@@ -26,8 +26,8 @@ func NewCertModel(db *sql.DB) *CertModel {
 	}
 }
 
-func (m *CertModel) Inser(cert *Certificate) error {
-	stmt := `INSERT INTO certs(user_id, domain, issuer, expiry_date, days_left, status VALUES($1, $2, $3, $4, $5))`
+func (m *CertModel) Insert(cert *Certificate) error {
+	stmt := `INSERT INTO certs(user_id, domain, issuer, expiry_date, days_left, status) VALUES($1, $2, $3, $4, $5, $6)`
 
 	args := []interface{}{cert.UserID, cert.Domain, cert.Issuer, cert.ExpiryDate, cert.DaysLeft, cert.Status}
 

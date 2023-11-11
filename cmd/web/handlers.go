@@ -139,9 +139,26 @@ func (app *application) newDomain(w http.ResponseWriter, r *http.Request) {
 
 	domainsString := form.Get("domain")
 	domains := strings.Split(strings.ReplaceAll(domainsString, " ", ""), ",")
-	for _, value := range domains {
-		app.infoLog.Println(value)
+
+	userId := app.authenticatedUser(r).Id
+
+	certs, err := app.track(userId, domains...)
+	if err != nil {
+		form.Errors.Add("domain", "One or more domains are invalid.")
+		app.render(w, r, pNEW, &templateData{HasSidebar: true, Form: form})
+		return
 	}
+
+	for _, cert := range certs {
+		err := app.models.Certs.Insert(cert)
+		if err != nil {
+			//TODO: Notify the user what went wrong
+			app.serverError(w, err)
+			return
+		}
+	}
+
+	http.Redirect(w, r, "/home/domains", http.StatusSeeOther)
 }
 
 func (app *application) logout(w http.ResponseWriter, r *http.Request) {

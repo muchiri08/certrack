@@ -5,17 +5,20 @@
 {{define "body"}}
 <div>
     <form action="/home/new" method="POST">
+        {{with .Form}}
         <div class="mb-6">
             <label for="domain" class="block mb-2 text-sm font-medium text-gray-900">Domain(s)</label>
-            {{with .Form.Errors.Get "domain"}}
-            <label class="mb-1 mt-0 text-xs text-red-500">{{.}}</label>
-            {{end}}            
-            <input type="text" id="domain" placeholder="domain, domain, domain" name="domain" required
+            {{with .Errors.Get "domain"}}
+            <label class="mb-1 mt-0 text-xs text-red-500">{{.}}</label> 
+            {{end}}
+            <input type="text" id="domain" placeholder="domain, domain, domain" name="domain" value='{{.Get "domain"}}'
+                required
                 class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500">
             <small class="italic text-xs">If more than one domain, separate them with comma(,)</small>
         </div>
         <input type="submit" value="submit"
             class="text-white bg-blue-700 hover:cursor-pointer hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center" />
+        {{end}}
     </form>
 </div>
 {{end}}
