@@ -3,6 +3,7 @@ package main
 import (
 	"html/template"
 	"path/filepath"
+	"time"
 
 	"github.com/muchiri08/certrack/internal/forms"
 	"github.com/muchiri08/certrack/internal/models"
@@ -15,6 +16,18 @@ type templateData struct {
 	Flash         string
 	Authenticated *models.User
 	Certificates  []*models.Certificate
+}
+
+func humanDate(t time.Time) string {
+	if t.IsZero() {
+		return ""
+	}
+
+	return t.UTC().Format("01 Jan 2006 at 15:04:05")
+}
+
+var functions = template.FuncMap{
+	"humanDate": humanDate,
 }
 
 // caching templates to speed up rendering
@@ -30,7 +43,12 @@ func newTemplateCache(dir string) (map[string]*template.Template, error) {
 		// get the name of the template
 		name := filepath.Base(page)
 
-		ts, err := template.ParseFiles(page)
+		// ts, err := template.ParseFiles(page)
+		// if err != nil {
+		// 	return nil, err
+		// }
+
+		ts, err := template.New(name).Funcs(functions).ParseFiles(page)
 		if err != nil {
 			return nil, err
 		}

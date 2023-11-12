@@ -42,7 +42,7 @@
                     {{.Issuer}}
                 </td>
                 <td class="px-6 py-4 bg-gray-50">
-                    {{.ExpiryDate}}
+                    {{.ExpiryDate | humanDate}}
                 </td>
                 <td class="px-6 py-4">
                     {{.DaysLeft}} Days
