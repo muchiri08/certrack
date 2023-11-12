@@ -8,13 +8,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var (
-	ErrDuplicateEmail    = errors.New("duplicate email")
-	ErrDuplicateUsername = errors.New("duplicate username")
-	ErrNoRecordFound     = errors.New("no record found")
-	ErrInvalidPassword   = errors.New("invalid credentials")
-)
-
 type User struct {
 	Id         int32
 	Username   string

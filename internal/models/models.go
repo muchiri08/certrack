@@ -1,6 +1,16 @@
 package models
 
-import "database/sql"
+import (
+	"database/sql"
+	"errors"
+)
+
+var (
+	ErrDuplicateEmail    = errors.New("duplicate email")
+	ErrDuplicateUsername = errors.New("duplicate username")
+	ErrNoRecordFound     = errors.New("no record found")
+	ErrInvalidPassword   = errors.New("invalid credentials")
+)
 
 type Models struct {
 	Users UserModel

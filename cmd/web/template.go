@@ -14,6 +14,7 @@ type templateData struct {
 	Form          *forms.Form
 	Flash         string
 	Authenticated *models.User
+	Certificates  []*models.Certificate
 }
 
 // caching templates to speed up rendering

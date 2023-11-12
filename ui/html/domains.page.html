@@ -5,6 +5,7 @@
 {{define "body"}}
 
 <div class="relative overflow-x-auto shadow-sm sm:rounded-lg">
+    {{if .Certificates}}
     <table class="w-full text-md text-left text-gray-500">
         <caption class="caption-top mb-5">
             Domains available for tracking.
@@ -31,72 +32,34 @@
                 </th> -->
             </tr>
         </thead>
+        {{range .Certificates}}
         <tbody>
             <tr class="bg-white border-b hover:bg-gray-50">
                 <th scope="row" class="px-6 py-4 font-medium text-green-600 whitespace-nowrap bg-gray-50 hover:text-emerald-500 hover:underline">
-                    <a href="#">example.com</a>
+                    <a href="#">{{.Domain}}</a>
                 </th>
                 <td class="px-6 py-4">
-                    DigiCert Inc
+                    {{.Issuer}}
                 </td>
                 <td class="px-6 py-4 bg-gray-50">
-                    2024-10-25 at 18:00
+                    {{.ExpiryDate}}
                 </td>
                 <td class="px-6 py-4">
-                    12 months
+                    {{.DaysLeft}} Days
                 </td>
                 <td class="px-6 py-4 bg-gray-50">
-                    Invalid
+                    {{.Status}}
                 </td>
                 <!-- <td class="px-6 py-4 text-right">
                     <a href="#" class="font-medium text-blue-600 hover:underline">Edit</a>
                     <a href="#" class="font-medium text-red-600 hover:underline">Del</a>
                 </td> -->
-            </tr>
-            <tr class="bg-white border-b hover:bg-gray-50">
-                <th scope="row" class="px-6 py-4 font-medium text-green-600 whitespace-nowrap bg-gray-50 hover:text-emerald-500 hover:underline">
-                    <a href="#">example.com</a>
-                </th>
-                <td class="px-6 py-4">
-                    DigiCert Inc
-                </td>
-                <td class="px-6 py-4 bg-gray-50">
-                    2024-10-25 at 18:00
-                </td>
-                <td class="px-6 py-4">
-                    12 months
-                </td>
-                <td class="px-6 py-4 bg-gray-50">
-                    Healthy
-                </td>
-                <!-- <td class="px-6 py-4 text-right">
-                    <a href="#" class="font-medium text-blue-600 hover:underline">Edit</a>
-                    <a href="#" class="font-medium text-red-600 hover:underline">Del</a>
-                </td> -->
-            </tr>
-            <tr class="bg-white border-b hover:bg-gray-50">
-                <th scope="row" class="px-6 py-4 font-medium text-green-600 whitespace-nowrap bg-gray-50 hover:text-emerald-500 hover:underline">
-                    <a href="#">example.com</a>
-                </th>
-                <td class="px-6 py-4">
-                    DigiCert Inc
-                </td>
-                <td class="px-6 py-4 bg-gray-50">
-                    2024-10-25 at 18:00
-                </td>
-                <td class="px-6 py-4">
-                    12 months
-                </td>
-                <td class="px-6 py-4 bg-gray-50">
-                    Healthy
-                </td>
-                <!-- <td class="px-6 py-4 text-right">
-                    <a href="#" class="font-medium text-blue-600 hover:underline">Edit</a>
-                    <a href="#" class="font-medium text-red-600 hover:underline">Del</a>
-                </td> -->
-            </tr>
         </tbody>
+        {{end}}
     </table>
+    {{else}}
+    <p>No shit motherfucker!</p>
+    {{end}}
 </div>
 
 {{end}}

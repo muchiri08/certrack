@@ -108,17 +108,8 @@ func (app *application) signin(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (app *application) home(w http.ResponseWriter, r *http.Request) {
-	switch {
-	case app.getParam(r, "view") == "domains":
-		app.render(w, r, pDOMAINS, &templateData{HasSidebar: true})
-	case app.getParam(r, "view") == "new":
-		app.render(w, r, pNEW, &templateData{HasSidebar: true, Form: &forms.Form{}})
-	case app.getParam(r, "view") == "account":
-		app.render(w, r, pACCOUNT, &templateData{HasSidebar: true})
-	default:
-		app.notFound(w)
-	}
+func (app *application) newDomainForm(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, pNEW, &templateData{HasSidebar: true, Form: &forms.Form{}})
 }
 
 func (app *application) newDomain(w http.ResponseWriter, r *http.Request) {
@@ -159,6 +150,27 @@ func (app *application) newDomain(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, "/home/domains", http.StatusSeeOther)
+}
+
+func (app *application) account(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, pACCOUNT, &templateData{HasSidebar: true})
+}
+
+func (app *application) getCerts(w http.ResponseWriter, r *http.Request) {
+	userId := app.authenticatedUser(r).Id
+	certs, err := app.models.Certs.GetCerts(userId)
+	if err != nil {
+		switch {
+		case errors.Is(err, models.ErrNoRecordFound):
+			app.render(w, r, pDOMAINS, &templateData{HasSidebar: true, Certificates: []*models.Certificate{}})
+			return
+		default:
+			app.serverError(w, err)
+			return
+		}
+	}
+
+	app.render(w, r, pDOMAINS, &templateData{HasSidebar: true, Certificates: certs})
 }
 
 func (app *application) logout(w http.ResponseWriter, r *http.Request) {
