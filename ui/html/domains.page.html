@@ -9,7 +9,7 @@
     <table class="w-full text-md text-left text-gray-500">
         <caption class="caption-top mb-5">
             Domains available for tracking.
-          </caption>
+        </caption>
         <thead class="text-xs text-gray-700 uppercase">
             <tr>
                 <th scope="col" class="px-6 py-3 bg-gray-50">
@@ -35,7 +35,8 @@
         {{range .Certificates}}
         <tbody>
             <tr class="bg-white border-b hover:bg-gray-50">
-                <th scope="row" class="px-6 py-4 font-medium text-green-600 whitespace-nowrap bg-gray-50 hover:text-emerald-500 hover:underline">
+                <th scope="row"
+                    class="px-6 py-4 font-medium text-green-600 whitespace-nowrap bg-gray-50 hover:text-emerald-500 hover:underline">
                     <a href="#">{{.Domain}}</a>
                 </th>
                 <td class="px-6 py-4">
@@ -58,7 +59,20 @@
         {{end}}
     </table>
     {{else}}
-    <p>No shit motherfucker!</p>
+    <div class="flex flex-col items-center justify-center mb-5 text-sm">
+        <p class="text-blue-900">No domains yet!</p>
+        <div>
+            <img src="/static/images/nodata.jpg" alt="No domains." width="200" height="200">
+        </div>
+        <a href="/home/new" class="bg-blue-500 hover:bg-blue-600 text-white py-1.5 px-5 rounded-full flex align-center gap-0.5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-4 h-3">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>add</span>
+        </a>
+    </div>
     {{end}}
 </div>
 
