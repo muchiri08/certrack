@@ -1,0 +1,30 @@
+{{define "subject"}} TLS Certificate Update Reminder!{{end}}
+
+{{define "plainBody"}}
+Hi {{.Username}},
+
+Your domain {{.Domain}} has {{.DaysLeft}} days remaining to expire. Please update to remain secured.
+
+Thanks.
+
+Certrack Team
+{{end}}
+
+{{define "htmlBody"}}
+<!doctype html>
+<html>
+
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+
+    <body>
+        <p>Hi {{.Username}},</p>
+        <p>Your domain {{.Domain}} has {{.DaysLeft}} days remaining to expire. Please update to remain secured.</p>
+        <p>Thanks.</p>
+        <p>Certrack Team</p>
+    </body>
+
+</html>
+{{end}}

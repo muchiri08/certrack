@@ -1,6 +1,14 @@
 package mailer
 
-import "gopkg.in/gomail.v2"
+import (
+	"bytes"
+	"embed"
+	"html/template"
+
+	"gopkg.in/gomail.v2"
+)
+
+var templateFS embed.FS
 
 type SMTPConfig struct {
 	Host     string
@@ -11,6 +19,7 @@ type SMTPConfig struct {
 
 type Mailer struct {
 	dialer *gomail.Dialer
+	sender string
 }
 
 func New(config *SMTPConfig) Mailer {
@@ -21,12 +30,37 @@ func New(config *SMTPConfig) Mailer {
 	}
 }
 
-func (m *Mailer) Send(from, to, subject string) error {
+func (m *Mailer) Send(to string, data interface{}) error {
+	tmpl, err := template.New("email").ParseFS(templateFS, "template/template.emai.html")
+	if err != nil {
+		return err
+	}
+
+	subject := new(bytes.Buffer)
+	err = tmpl.ExecuteTemplate(subject, "subject", data)
+	if err != nil {
+		return err
+	}
+
+	plainBody := new(bytes.Buffer)
+	err = tmpl.ExecuteTemplate(plainBody, "plainBody", data)
+	if err != nil {
+		return err
+	}
+
+	htmlBody := new(bytes.Buffer)
+	err = tmpl.ExecuteTemplate(htmlBody, "htmlBody", data)
+	if err != nil {
+		return err
+	}
+
 	msg := gomail.NewMessage()
 
-	msg.SetHeader("From", from)
+	msg.SetHeader("From", m.sender)
 	msg.SetHeader("To", to)
-	msg.SetHeader("Subject", subject)
+	msg.SetHeader("Subject", subject.String())
+	msg.SetBody("text/plain", plainBody.String())
+	msg.AddAlternative("text/html", htmlBody.String())
 
 	return m.dialer.DialAndSend(msg)
 }
