@@ -71,3 +71,44 @@ func (m *CertModel) GetCerts(userId int32) ([]*Certificate, error) {
 	return certs, nil
 
 }
+
+type Data struct {
+	Username string
+	Domain   string
+	DaysLeft int
+	Email    string
+}
+
+func (m *CertModel) GetAlmostExpired() ([]*Data, error) {
+	stmt := `SELECT u.username, c.domain, c.days_left, u.email FROM certs c JOIN users u ON c.user_id = u.id WHERE c.days_left < 50`
+
+	rows, err := m.DB.Query(stmt)
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil, ErrNoRecordFound
+		default:
+			return nil, err
+		}
+
+	}
+
+	var dataSlice []*Data
+	for rows.Next() {
+		var data Data
+
+		err := rows.Scan(&data.Username, &data.Domain, &data.DaysLeft, &data.Email)
+		if err != nil {
+			switch {
+			case errors.Is(err, sql.ErrNoRows):
+				return nil, ErrNoRecordFound
+			default:
+				return nil, err
+			}
+		}
+
+		dataSlice = append(dataSlice, &data)
+	}
+
+	return dataSlice, nil
+}

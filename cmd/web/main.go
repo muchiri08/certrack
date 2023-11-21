@@ -86,6 +86,9 @@ func main() {
 		WriteTimeout: 10 * time.Second,
 	}
 
+	//test sending
+	app.sendNotification()
+
 	infoLog.Println("Starting the server on port", *port)
 	err = srv.ListenAndServe()
 	if err != nil {
