@@ -14,6 +14,7 @@ import (
 	"github.com/alexedwards/scs/v2"
 	_ "github.com/lib/pq"
 
+	"github.com/muchiri08/certrack/internal/mailer"
 	"github.com/muchiri08/certrack/internal/models"
 )
 
@@ -23,6 +24,7 @@ type application struct {
 	templateCache  map[string]*template.Template
 	models         models.Models
 	sessionManager *scs.SessionManager
+	mailer         mailer.Mailer
 }
 
 type contextKey string
@@ -57,12 +59,23 @@ func main() {
 	sessionManager.Lifetime = 24 * time.Hour
 	sessionManager.Cookie.SameSite = http.SameSiteStrictMode
 
+	config := mailer.SMTPConfig{
+		Host:     "sandbox.smtp.mailtrap.io",
+		Port:     2525,
+		Username: "68d5bfa388790b",
+		Password: "baefec63af537d",
+		Sender:   "Mbogo <mbogokennedy08@gmail.com>",
+	}
+
+	mailer := mailer.New(&config)
+
 	app := &application{
 		infoLog:        infoLog,
 		errorLog:       errorLog,
 		templateCache:  tempCache,
 		models:         models.NewModel(db),
 		sessionManager: sessionManager,
+		mailer:         mailer,
 	}
 
 	srv := http.Server{

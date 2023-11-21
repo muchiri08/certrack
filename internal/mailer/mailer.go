@@ -8,6 +8,7 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
+//go:embed "template"
 var templateFS embed.FS
 
 type SMTPConfig struct {
@@ -15,6 +16,7 @@ type SMTPConfig struct {
 	Port     int
 	Username string
 	Password string
+	Sender   string
 }
 
 type Mailer struct {
@@ -27,11 +29,12 @@ func New(config *SMTPConfig) Mailer {
 
 	return Mailer{
 		dialer: dialer,
+		sender: config.Sender,
 	}
 }
 
 func (m *Mailer) Send(to string, data interface{}) error {
-	tmpl, err := template.New("email").ParseFS(templateFS, "template/template.emai.html")
+	tmpl, err := template.New("email").ParseFS(templateFS, "template/template.email.html")
 	if err != nil {
 		return err
 	}
