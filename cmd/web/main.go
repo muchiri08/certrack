@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/alexedwards/scs/v2"
+	"github.com/carlescere/scheduler"
 	_ "github.com/lib/pq"
 
 	"github.com/muchiri08/certrack/internal/mailer"
@@ -86,8 +87,8 @@ func main() {
 		WriteTimeout: 10 * time.Second,
 	}
 
-	//test sending
-	app.sendNotification()
+	//sending notifications
+	scheduler.Every().Sunday().At("00:00").Run(app.sendNotification)
 
 	infoLog.Println("Starting the server on port", *port)
 	err = srv.ListenAndServe()

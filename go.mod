@@ -6,6 +6,7 @@ require golang.org/x/crypto v0.14.0
 
 require (
 	github.com/alexedwards/scs/v2 v2.6.0 // indirect
+	github.com/carlescere/scheduler v0.0.0-20170109141437-ee74d2f83d82 // indirect
 	github.com/julienschmidt/httprouter v1.3.0 // indirect
 	github.com/justinas/alice v1.2.0 // indirect
 	github.com/lib/pq v1.10.9 // indirect

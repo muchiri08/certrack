@@ -7,7 +7,7 @@ import (
 )
 
 func (app *application) sendNotification() {
-	app.infoLog.Println("sending notification...")
+	app.infoLog.Println("send-notification triggered...")
 	data, err := app.models.Certs.GetAlmostExpired()
 	if err != nil {
 		switch {
