@@ -126,7 +126,7 @@ func (app *application) newDomain(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	app.infoLog.Println(form.Get("domain"))
+	app.infoLog.Println("new domain =", form.Get("domain"))
 
 	domainsString := form.Get("domain")
 	domains := strings.Split(strings.ReplaceAll(domainsString, " ", ""), ",")

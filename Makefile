@@ -5,7 +5,7 @@ run:
 	@go run ./cmd/web -dsn=${CERTRACK-DSN}
 
 .PHONY: watch
-watch: 
+watch:
 	@npx tailwindcss -i ./ui/static/main.css -o ./ui/static/output.css --watch
 
 .PHONY: create
@@ -17,3 +17,8 @@ create:
 migrate/up:
 	@echo 'Running up migrations...'
 	@migrate -path=./migrations -database=${CERTRACK-DSN} up
+
+.PHONY: build
+build:
+	@npx tailwindcss -o ui/static/output.css --minify
+	@go build -o ./bin/certrack ./cmd/web

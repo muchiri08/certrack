@@ -2,9 +2,11 @@ package main
 
 import (
 	"html/template"
+	"io/fs"
 	"path/filepath"
 	"time"
 
+	ui "github.com/muchiri08/certrack"
 	"github.com/muchiri08/certrack/internal/forms"
 	"github.com/muchiri08/certrack/internal/models"
 )
@@ -31,13 +33,16 @@ var functions = template.FuncMap{
 }
 
 // caching templates to speed up rendering
-func newTemplateCache(dir string) (map[string]*template.Template, error) {
+func newTemplateCache() (map[string]*template.Template, error) {
 	cache := map[string]*template.Template{}
-
-	pages, err := filepath.Glob(filepath.Join(dir, "*.page.html"))
+	pages, err := fs.Glob(ui.UI, "ui/html/*.page.html")
 	if err != nil {
 		return nil, err
 	}
+	// pages, err := filepath.Glob(filepath.Join(dir, "*.page.html"))
+	// if err != nil {
+	// 	return nil, err
+	// }
 
 	for _, page := range pages {
 		// get the name of the template
@@ -54,13 +59,13 @@ func newTemplateCache(dir string) (map[string]*template.Template, error) {
 		}
 
 		// add partial templates
-		ts, err = ts.ParseGlob(filepath.Join(dir, "*.partial.html"))
+		ts, err = ts.ParseGlob(filepath.Join("./ui/html", "*.partial.html"))
 		if err != nil {
 			return nil, err
 		}
 
 		// add layout template
-		ts, err = ts.ParseGlob(filepath.Join(dir, "*.layout.html"))
+		ts, err = ts.ParseGlob(filepath.Join("./ui/html", "*.layout.html"))
 		if err != nil {
 			return nil, err
 		}
