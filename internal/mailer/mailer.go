@@ -3,6 +3,7 @@ package mailer
 import (
 	"bytes"
 	"embed"
+	"fmt"
 	"html/template"
 
 	"gopkg.in/gomail.v2"
@@ -25,6 +26,7 @@ type Mailer struct {
 }
 
 func New(config *SMTPConfig) Mailer {
+	fmt.Printf("smtp configs: %v\n", *config)
 	dialer := gomail.NewDialer(config.Host, config.Port, config.Username, config.Password)
 
 	return Mailer{

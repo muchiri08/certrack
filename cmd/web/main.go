@@ -31,6 +31,7 @@ type application struct {
 type contextKey string
 
 var (
+	smtpConfig     mailer.SMTPConfig
 	dsn            string
 	contextKeyUser = contextKey("user")
 )
@@ -39,6 +40,11 @@ func main() {
 
 	port := flag.Int("port", 4000, "port address")
 	flag.StringVar(&dsn, "dsn", "", "PostgreSQL DSN")
+	flag.IntVar(&smtpConfig.Port, "smtp-port", 2525, "SMTP port")
+	flag.StringVar(&smtpConfig.Host, "smtp-host", "sandbox.smtp.mailtrap.io", "SMTP host")
+	flag.StringVar(&smtpConfig.Username, "smtp-user", "68d5bfa388790b", "SMTP username")
+	flag.StringVar(&smtpConfig.Password, "smtp-pwd", "baefec63af537d", "SMTP password")
+	flag.StringVar(&smtpConfig.Sender, "smtp-sender", "mbogokennedy08@gmail.com", "SMTP sender email")
 
 	flag.Parse()
 
@@ -60,15 +66,7 @@ func main() {
 	sessionManager.Lifetime = 24 * time.Hour
 	sessionManager.Cookie.SameSite = http.SameSiteStrictMode
 
-	config := mailer.SMTPConfig{
-		Host:     "sandbox.smtp.mailtrap.io",
-		Port:     2525,
-		Username: "68d5bfa388790b",
-		Password: "baefec63af537d",
-		Sender:   "Mbogo <mbogokennedy08@gmail.com>",
-	}
-
-	mailer := mailer.New(&config)
+	mailer := mailer.New(&smtpConfig)
 
 	app := &application{
 		infoLog:        infoLog,
